@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Flutter의 기본 위젯들을 임포트
+import 'package:recode/data/game_list.dart';
 import 'package:table_calendar/table_calendar.dart'; // 테이블 캘린더 라이브러리 임포트
 
 class CalendarScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       // 전체 화면의 구조 제공
       appBar: AppBar(
         // 상단 앱바
-        title: Text('직관 기록'), // 타이틀 텍스트
+        title: Center(child: Text('직관 기록')), // 타이틀 텍스트
         leading: IconButton(
           // 왼쪽 뒤로가기 버튼
           icon: Icon(Icons.arrow_back),
@@ -37,10 +38,62 @@ class _CalendarScreenState extends State<CalendarScreen> {
         // 화면의 본문을 세로로 나열
         children: [
           SizedBox(height: 16), // 상단 여백
-          Text(
-            '${_focusedDay.year}년 ${_focusedDay.month}월', // 현재 포커스된 월/년 표시
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 왼쪽 화살표
+              SizedBox(width: 16),
+              IconButton(
+                icon: Icon(
+                  Icons.chevron_left,
+                  size: 36, // 아이콘 크기 작게
+                  color: Colors.black,
+                ),
+                style: IconButton.styleFrom(
+                  padding: EdgeInsets.all(1),
+                  // 아이콘과 원 사이 간격 좁게
+                  minimumSize: Size(36, 36),
+                  // 전체 버튼 크기 (지름 줄이기)
+                  shape: CircleBorder(),
+                  side: BorderSide(color: Colors.black, width: 1.5),
+                  backgroundColor: Colors.transparent,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 클릭 영역도 줄이기
+                ),
+                onPressed: () {
+                  // 이전 달 이동
+                },
+              ),
+              Text(
+                '${_focusedDay.year}년 ${_focusedDay.month}월', // 현재 포커스된 월/년 표시
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+
+              // 오른쪽 화살표
+              IconButton(
+                icon: Icon(
+                  Icons.chevron_right,
+                  size: 36, // 아이콘 크기 작게
+                  color: Colors.black,
+                ),
+                style: IconButton.styleFrom(
+                  padding: EdgeInsets.all(1),
+                  // 아이콘과 원 사이 간격 좁게
+                  minimumSize: Size(36, 36),
+                  // 전체 버튼 크기 (지름 줄이기)
+                  shape: CircleBorder(),
+                  side: BorderSide(color: Colors.black, width: 1.5),
+                  backgroundColor: Colors.transparent,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap, // 클릭 영역도 줄이기
+                ),
+                onPressed: () {
+                  // 이전 달 이동
+                },
+              ),
+              SizedBox(width: 16),
+            ],
           ),
+          SizedBox(height: 16), // 하단 여백
           TableCalendar(
             // 테이블 캘린더 위젯
             locale: 'ko_KR',
@@ -82,6 +135,66 @@ class _CalendarScreenState extends State<CalendarScreen> {
             // 달 보기 형식
             daysOfWeekHeight: 30, // 요일 행 높이
           ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(), // 내부 스크롤 방지
+            itemCount: gameList.length,
+            itemBuilder: (context, index) {
+              final game = gameList[index];
+              return Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 왼쪽 점수
+                      Text(
+                        '${game['homeScore']}',
+                        style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold, color: Colors.grey),
+                      ),
+
+                      // 가운데: 경기 정보
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text('${game['homeTeam']}', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                              SizedBox(width: 16),
+                              Text(' vs ', style: TextStyle(fontSize: 16)),
+                              SizedBox(width: 16),
+                              Text('${game['awayTeam']}', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            game['date'],
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                          Text(
+                            game['stadium'],
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+
+                      // 오른쪽 점수
+                      Text(
+                        '${game['awayScore']}',
+                        style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNaviBar(),
@@ -107,10 +220,10 @@ class BottomNaviBar extends StatelessWidget {
       items: const [
         // 각 탭 항목들
         BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: '예측'),
-        BottomNavigationBarItem(icon: Icon(Icons.event), label: '오늘의경기'),
         BottomNavigationBarItem(icon: Icon(Icons.list), label: '기록'),
-        BottomNavigationBarItem(icon: Icon(Icons.people), label: '응원'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: '마이페이지'),
+        BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: '홈'),
+        BottomNavigationBarItem(icon: Icon(Icons.chat_bubble), label: '채팅'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: '동행'),
       ],
       currentIndex: 2,
       // 현재 선택된 탭 인덱스 (기록)
