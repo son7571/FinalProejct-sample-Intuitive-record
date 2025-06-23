@@ -4,7 +4,7 @@ final List<Map<String, dynamic>> gameList = [
     'awayTeam': '키움',
     'homeScore': 0,
     'awayScore': 5,
-    'date': '2025.06.22',
+    'date': '2025.06.23',
     'stadium': '대전한화생명불파크',
   },
   {
@@ -14,5 +14,14 @@ final List<Map<String, dynamic>> gameList = [
     'awayScore': 7,
     'date': '2025.06.23',
     'stadium': '대구삼성라이온즈파크',
+  },
+
+  {
+    'homeTeam': '롯데',
+    'awayTeam': 'NC',
+    'homeScore': 5,
+    'awayScore': 4,
+    'date': '2025.06.23',
+    'stadium': '사직 야구장',
   },
 ];

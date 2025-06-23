@@ -34,7 +34,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         // 화면의 본문을 세로로 나열
         children: [
           SizedBox(height: 16), // 상단 여백
